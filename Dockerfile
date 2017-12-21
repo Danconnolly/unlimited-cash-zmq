@@ -31,3 +31,13 @@ RUN mkdir -p /bitcoin/bin
 
 COPY --from=builder /bitcoin/bin/* /bitcoin/bin/
 
+ENV BITCOIN_DATA /data
+RUN mkdir "$BITCOIN_DATA" \
+	&& chown -R bitcoin:bitcoin "$BITCOIN_DATA" \
+	&& ln -sfn "$BITCOIN_DATA" /bitcoin/.bitcoin \
+	&& chown -h bitcoin:bitcoin /bitcoin/.bitcoin
+VOLUME /data
+
+EXPOSE 8332 8333 18332 18333
+CMD ["bitcoind"]
+
